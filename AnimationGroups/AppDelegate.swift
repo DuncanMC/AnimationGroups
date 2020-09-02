@@ -3,8 +3,8 @@
 //  AnimationGroups
 //
 //  Created by Duncan Champney on 9/2/20.
-//  Copyright © 2020 Duncan Champney. All rights reserved.
-//
+//  Based on a Stack Overflow post by Matt Neuburg @ https://stackoverflow.com/a/63710424/205185
+//  Where he demonstrated a technique for using CAAnimationGroup objects to animate multiple CALayers.
 
 import UIKit
 
