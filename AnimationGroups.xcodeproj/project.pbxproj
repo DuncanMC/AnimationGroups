@@ -13,6 +13,7 @@
 		AE5335F625001A8C005EAC7E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AE5335F425001A8C005EAC7E /* Main.storyboard */; };
 		AE5335F825001A8E005EAC7E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AE5335F725001A8E005EAC7E /* Assets.xcassets */; };
 		AE5335FB25001A8E005EAC7E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AE5335F925001A8E005EAC7E /* LaunchScreen.storyboard */; };
+		AE89370925013C7A00EBE758 /* UIViewController+CAAnimationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE89370825013C7A00EBE758 /* UIViewController+CAAnimationDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		AE5335F725001A8E005EAC7E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AE5335FA25001A8E005EAC7E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AE5335FC25001A8E005EAC7E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AE89370825013C7A00EBE758 /* UIViewController+CAAnimationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+CAAnimationDelegate.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 				AE5335EE25001A8C005EAC7E /* AppDelegate.swift */,
 				AE5335F025001A8C005EAC7E /* SceneDelegate.swift */,
 				AE5335F225001A8C005EAC7E /* ViewController.swift */,
+				AE89370825013C7A00EBE758 /* UIViewController+CAAnimationDelegate.swift */,
 				AE5335F425001A8C005EAC7E /* Main.storyboard */,
 				AE5335F725001A8E005EAC7E /* Assets.xcassets */,
 				AE5335F925001A8E005EAC7E /* LaunchScreen.storyboard */,
@@ -138,6 +141,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AE89370925013C7A00EBE758 /* UIViewController+CAAnimationDelegate.swift in Sources */,
 				AE5335F325001A8C005EAC7E /* ViewController.swift in Sources */,
 				AE5335EF25001A8C005EAC7E /* AppDelegate.swift in Sources */,
 				AE5335F125001A8C005EAC7E /* SceneDelegate.swift in Sources */,

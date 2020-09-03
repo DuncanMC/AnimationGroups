@@ -8,11 +8,8 @@
 
 import UIKit
 
-typealias AnimationCompletion = (Bool) -> Void
-
 class ViewController: UIViewController {
 
-    let animationCompletionKey = "animationCompletion"
 
     let imageWidth: CGFloat = 50.0
     let imageHeight: CGFloat = 80.0
@@ -163,14 +160,3 @@ class ViewController: UIViewController {
         self.view.layer.add(group, forKey: nil)
     }
 }
-
-extension ViewController: CAAnimationDelegate {
-    func animationDidStop(_ animation: CAAnimation, finished: Bool) {
-
-        //See if the animation has an attached AnimationCompletion closure
-        guard let completion = animation.value(forKey: animationCompletionKey) as? AnimationCompletion else { return }
-        completion(finished)
-    }
-}
-
-
