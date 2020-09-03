@@ -19,7 +19,6 @@ class ViewController: UIViewController {
     var feetYPosition: CGFloat = 0
     let stepDuration = 0.25
 
-
     @IBOutlet weak var animateButton: UIButton!
     let leftfoot = CALayer()
     let rightfoot = CALayer()
@@ -28,11 +27,9 @@ class ViewController: UIViewController {
         super.viewDidLoad()
     }
 
-
     override func viewDidLayoutSubviews() {
         setup()
     }
-
 
     @IBAction func handleAnimateButton(_ sender: UIButton) {
         animateButton.isEnabled = false
@@ -59,6 +56,11 @@ class ViewController: UIViewController {
         let animationYRange = animateButton.frame.origin.y - (imageHeight * 2 + 10)
         let stepPairs = Int(animationYRange / (imageHeight * 2))
 
+        guard stepPairs > 0 else {
+            self.animateButton.isEnabled = true
+            return
+
+        }
         var stepStart = 0.0
         let firstLeftStep = CABasicAnimation(keyPath: "sublayers.left.position.y")
 
