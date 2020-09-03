@@ -8,10 +8,17 @@
 
 import UIKit
 
-class ViewController: UIViewController, CAAnimationDelegate {
+typealias AnimationCompletion = (Bool) -> Void
+
+class ViewController: UIViewController {
+
+    let animationCompletionKey = "animationCompletion"
 
     let imageWidth: CGFloat = 50.0
     let imageHeight: CGFloat = 80.0
+    var feetYPosition: CGFloat = 0
+    let stepDuration = 0.25
+
 
     @IBOutlet weak var animateButton: UIButton!
     let leftfoot = CALayer()
@@ -38,6 +45,7 @@ class ViewController: UIViewController, CAAnimationDelegate {
         self.leftfoot.contents = UIImage(named:"leftfoot")!.cgImage
         self.leftfoot.frame = CGRect(x: left, y: animateButton.frame.origin.y - (imageHeight + 10), width: imageWidth, height: imageHeight)
         self.view.layer.addSublayer(self.leftfoot)
+        feetYPosition = self.leftfoot.position.y
 
         self.rightfoot.name = "right"
         self.rightfoot.contents = UIImage(named:"rightfoot")!.cgImage
@@ -47,9 +55,6 @@ class ViewController: UIViewController, CAAnimationDelegate {
     }
 
     func start() {
-        let stepDuration = 1.0
-
-
         //Figure out how many pairs of steps will fit vertically on the screen
         let animationYRange = animateButton.frame.origin.y - (imageHeight * 2 + 10)
         let stepPairs = Int(animationYRange / (imageHeight * 2))
@@ -61,6 +66,7 @@ class ViewController: UIViewController, CAAnimationDelegate {
 
         //Make the first step half as far as the remaining.
         firstLeftStep.byValue = -imageHeight
+
         firstLeftStep.duration = stepDuration
         firstLeftStep.fillMode = .forwards
 
@@ -85,6 +91,13 @@ class ViewController: UIViewController, CAAnimationDelegate {
 
         let group = CAAnimationGroup()
         group.duration = (Double(stepPairs) * 2.0 + 1) * stepDuration
+
+        //Leave the animation group animation active once complete.
+        //(That way we can easily add another animation to return the feet to their
+        //original locations.)
+        group.fillMode = .forwards
+        group.isRemovedOnCompletion = false
+
         stepStart += stepDuration
         group.animations = [firstLeftStep]
         for _ in 1...stepPairs {
@@ -93,15 +106,69 @@ class ViewController: UIViewController, CAAnimationDelegate {
             group.animations?.append(leftStepAfter(stepStart))
             stepStart += stepDuration
         }
+
+        //Define a completion block to run when the animation is finished
+        let animationCompletion: AnimationCompletion = { finished in
+            guard finished else { return }
+            self.doFinishAnimation()
+        }
+
+        //Attach a completion block to the animation
+        group.setValue(animationCompletion, forKey: animationCompletionKey)
         group.delegate = self
+
         self.view.layer.add(group, forKey: nil)
     }
 
-    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
-        self.rightfoot.removeFromSuperlayer()
-        self.leftfoot.removeFromSuperlayer()
-        setup()
-        animateButton.isEnabled = true
-    }
+    func doFinishAnimation() {
 
+        //Create another animation group to animate both image layers back to their starting position
+        let group = CAAnimationGroup()
+        group.duration = stepDuration * 2
+
+        //Have the return animation begin after a short pause
+        group.beginTime = CACurrentMediaTime() + 0.2
+        group.fillMode = .forwards
+
+        //Animate the right foot back to its original position
+        let rightStep = CABasicAnimation(keyPath: "sublayers.right.position.y")
+        rightStep.fillMode = .forwards
+        rightStep.toValue = feetYPosition
+        rightStep.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+        rightStep.duration = stepDuration * 2
+        group.animations = [rightStep]
+
+        //Animate the left foot back to its original position at the same time
+        let leftStep = CABasicAnimation(keyPath: "sublayers.left.position.y")
+        leftStep.fillMode = .forwards
+        leftStep.toValue = feetYPosition
+        leftStep.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+        leftStep.duration = stepDuration * 2
+
+        //In the completion block, remove all animations and re-enable the animate button.
+        let animationCompletion: AnimationCompletion = { finished in
+            guard finished else { return }
+            self.view.layer.removeAllAnimations()
+            self.animateButton.isEnabled = true
+        }
+
+        group.animations?.append(leftStep)
+        group.delegate = self
+
+        //Attach a completion block to the group animation
+        group.setValue(animationCompletion, forKey: animationCompletionKey)
+
+        self.view.layer.add(group, forKey: nil)
+    }
 }
+
+extension ViewController: CAAnimationDelegate {
+    func animationDidStop(_ animation: CAAnimation, finished: Bool) {
+
+        //See if the animation has an attached AnimationCompletion closure
+        guard let completion = animation.value(forKey: animationCompletionKey) as? AnimationCompletion else { return }
+        completion(finished)
+    }
+}
+
+
